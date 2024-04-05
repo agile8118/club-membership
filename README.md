@@ -22,7 +22,7 @@ After pip installing the packages above, run `python app.py` from the working di
 
 #### Folder structure:
 
-We're going to have all our routes in app.py file. For each feature of our app, we add a new controller file in the controllers file, and put all the functionality of that there.
+We're going to have all our routes in app.py file. For each feature of our app, we add a new controller file in the controllers folder, and put all the functionality of that there.
 For example, for the authentication feature, we have a file called authentication.py that contains the logic for both logging in and registration. Then this file is imported in the app.py file and its functions are called for each corresponding route.
 
 In the client folder, we have our react code. This folder produces a huge JavaScript file which is then put in the static folder.
@@ -66,4 +66,4 @@ for user in DB.users:
 DB.users[0]["name"] = "John Doe"
 ```
 
-**IMPORTANT!** Every time we change something from the DB object, we have to run `DB.save()` to save all the data to the data folder.
+**IMPORTANT!** Every time we change something in the DB object like the example above, we have to run `DB.save()` to save all the data to the data folder.
