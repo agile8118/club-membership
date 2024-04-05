@@ -2,9 +2,21 @@ from flask import request, jsonify
 import bcrypt
 import random
 import base64
+import jwt
+import datetime
 from DB import DB
 
 DB = DB()
+
+
+def generate_jwt_token():
+    secret_key = "fe3gbhyrffefwjchvqw354eq62"  # our secret key, should be stored in a secure location
+    token_payload = {
+        "exp": datetime.datetime.now(datetime.timezone.utc)
+        + datetime.timedelta(hours=1)
+    }
+    token = jwt.encode(token_payload, secret_key, algorithm="HS256")
+    return token
 
 
 class Authentication:
@@ -26,7 +38,7 @@ class Authentication:
 
                 if bcrypt.checkpw(password.encode("utf-8"), hashed_password):
                     # Generate a random token
-                    token = str(random.randint(0, 10000000000))
+                    token = generate_jwt_token()
 
                     # remove the previous session token if it exists
                     for session in DB.sessions:
@@ -74,7 +86,7 @@ class Authentication:
         DB.users.append(user)
 
         # Generate a random token
-        token = str(random.randint(0, 10000000000))
+        token = generate_jwt_token()
         DB.sessions.append({"token": token, "user_id": user.get("id")})
 
         # save DB
