@@ -10,6 +10,7 @@ DB = DB()
 
 # Controllers
 from controllers.authentication import Authentication
+from controllers.users import Users
 
 
 app = Flask(__name__)
@@ -82,6 +83,11 @@ def register():
     if request.method == "POST":
         return Authentication.register()
 
+
+@app.route('/users', methods=["GET"])
+def users():
+    if request.method == "GET":
+        return Users.getUsers()
 
 # Example of route that requires authentication
 # The user_id is available in the request object as request.user_id
