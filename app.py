@@ -2,10 +2,7 @@ from flask import (
     Flask,
     send_from_directory,
     jsonify,
-    render_template,
     request,
-    redirect,
-    url_for,
 )
 from DB import DB
 
@@ -45,18 +42,51 @@ def home():
     return send_from_directory(app.static_folder, "index.html")
 
 
+# Example of an accepted JSON body:
+# {
+#     "phone": "1234567890",
+#     "password": "password",
+# }
+#
+# Example of a response:
+# {
+#     "message": "Login successful",
+#     "token": "some-token"
+# }
+#
+# Token should be sent in the Authorization header for future requests
 @app.route("/login", methods=["POST"])
 def login():
     if request.method == "POST":
         return Authentication.login()
 
 
+# Example of an accepted JSON body:
+# {
+#     "name": "John Doe",
+#     "email": "john@company.com",
+#     "address": "123 Some Street",
+#     "phone": "1234567890",
+#     "password": "password",
+# }
+#
+# Example of a response:
+# {
+#     "message": "User registered successfully.",
+#     "token": "some-token"
+# }
+#
+# Token should be sent in the Authorization header for future requests
 @app.route("/register", methods=["POST"])
 def register():
     if request.method == "POST":
         return Authentication.register()
 
 
+# Example of route that requires authentication
+# The user_id is available in the request object as request.user_id
+# This only happens if the we have a valid token in the Authorization header
+# Check this function to see how it's done: check_authentication()
 @app.route("/protected-test", methods=["GET"])
 def pt():
     if request.method == "GET":
