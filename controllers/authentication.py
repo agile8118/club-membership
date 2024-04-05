@@ -1,6 +1,5 @@
 from flask import request, jsonify
 import bcrypt
-import random
 import base64
 import jwt
 import datetime
