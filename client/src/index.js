@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import Home from "./components/Home";
-// import Login from "./components/Login";
+import Login from "./components/Login";
 // import Profile from "./components/Profile";
 // import Header from "./components/Header";
 
@@ -20,7 +20,7 @@ function App() {
         {/* <Header /> */}
         <Routes>
           {/* EDIT THIS LATER BACK TO HOME */}
-          <Route path="/" element={<Login />} /> 
+          <Route path="/" element={<Home />} />
           <Route path="login/" element={<Login />} />
           {/* <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} /> */}
