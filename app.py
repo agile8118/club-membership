@@ -4,15 +4,17 @@ from flask import (
     jsonify,
     request,
 )
+from flask_cors import CORS
 from DB import DB
 
 DB = DB()
 
+app = Flask(__name__)
+CORS(app)
+
+
 # Controllers
 from controllers.authentication import Authentication
-
-
-app = Flask(__name__)
 
 
 # Middleware to check if user is authenticated
@@ -37,9 +39,11 @@ def check_authentication():
         return jsonify({"error": "Unauthorized"}), 401
 
 
-@app.route("/")
-def home():
-    return send_from_directory(app.static_folder, "index.html")
+# Middleware to serve the index.html file for different routes
+@app.before_request
+def send_index_file():
+    if request.method == "GET" and request.path in ["/", "/login", "/register"]:
+        return send_from_directory(app.static_folder, "index.html")
 
 
 # Example of an accepted JSON body:
@@ -55,12 +59,10 @@ def home():
 # }
 #
 # Token should be sent in the Authorization header for future requests
-@app.route("/login", methods=["POST", "GET"])
+@app.route("/login", methods=["POST", "GET", "OPTIONS"])
 def login():
     if request.method == "POST":
         return Authentication.login()
-    if request.method == "GET":
-        return send_from_directory(app.static_folder, "index.html")
 
 
 # Example of an accepted JSON body:

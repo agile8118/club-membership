@@ -50,7 +50,7 @@ class Authentication:
                     return jsonify({"message": "Login successful", "token": token})
 
         # return error message if authentication fails
-        return jsonify({"error": "Invalid phone or password"})
+        return jsonify({"error": "Invalid phone or password"}), 401
 
     @staticmethod
     def register():

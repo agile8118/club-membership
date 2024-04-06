@@ -1,34 +1,69 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import Input from "../reusable/Input";
+import Button from "../reusable/Button";
+import alert from "../lib/alert";
 
 const Login = () => {
-  const [phoneNum, setPhoneNum] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    console.log("User logged in with phone", phoneNum);
+  const navigate = useNavigate();
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      /** @API call */
+      await axios.post("/login", { phone, password });
+      setLoggedIn(true);
+      navigate("/");
+    } catch (err) {
+      if (err.response.data.error) {
+        alert(err.response.data.error, "error");
+      }
+    }
+    setLoading(false);
   };
 
   return (
-    <div>
-      <label htmlFor="phone">Phone Number:</label>
-      <input
-        type="phone"
-        id="phone"
-        value={phoneNum}
-        onChange={(e) => setPhoneNum(e.target.value)}
-        placeholder="Phone Number"
-      />
+    <div className="login-container">
+      <form onSubmit={onFormSubmit}>
+        <div className="form-group">
+          <Input
+            type="phone"
+            label="Phone Number"
+            value={phone}
+            onChange={(value) => {
+              setPhone(value);
+            }}
+          />
+        </div>
+        <div className="form-group">
+          <Input
+            type="password"
+            label="Password"
+            value={password}
+            onChange={(value) => {
+              setPassword(value);
+            }}
+          />
+        </div>
 
-      <label htmlFor="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
+        <div className="form-group u-flex-text-right">
+          <Button color="blue" type="submit" loading={loading}>
+            Login
+          </Button>
+        </div>
 
-      <button onClick={handleLogin}>Log In</button>
+        <div className="form-group u-text-center login-bottom-msg">
+          <span>Don't have an account? </span>
+          <Link to="/register">Create one.</Link>
+        </div>
+      </form>
     </div>
   );
 };
