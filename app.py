@@ -55,10 +55,12 @@ def home():
 # }
 #
 # Token should be sent in the Authorization header for future requests
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
         return Authentication.login()
+    if request.method == "GET":
+        return send_from_directory(app.static_folder, "index.html")
 
 
 # Example of an accepted JSON body:
