@@ -7,7 +7,7 @@ const Login = () => {
 
     const handleLogin = () => {
 
-        console.log("User logged in with email", email);
+        console.log("User logged in with phone", phoneNum);
 
     }
 
