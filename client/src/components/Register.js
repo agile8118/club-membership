@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AppContext } from "../index";
+import { useNavigate, Link } from "react-router-dom";
 import Input from "../reusable/Input";
 import Button from "../reusable/Button";
 import alert from "../lib/alert";
@@ -10,70 +12,88 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { loggedIn, setLoggedIn, setSection } = useContext(AppContext);
+
+  const navigate = useNavigate();
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await axios.post("/register", { name, email, address, phone, password });
-      navigate("/login"); // after user registers, go to login page
+      const { data } = await axios.post("/register", {
+        name,
+        email,
+        address,
+        phone: phoneNum,
+        password,
+      });
+      alert("Registered successfully!", "success");
+      localStorage.setItem("token", data.token);
+
+      setLoggedIn(true);
+      navigate("/");
+      setSection("/");
     } catch (err) {
+      console.log(err);
       if (err.response.data.error) {
         alert(err.response.data.error, "error");
       }
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="register-container">
+    <div className="login-container">
+      <h2 className="u-text-center">Register</h2>
       <form onSubmit={onFormSubmit}>
-        <label htmlFor="name">Full Name:</label>
         <div className="form-group">
           <Input
             type="name"
-            id="name"
+            required
+            label="Name"
             value={name}
             onChange={(value) => setName(value)}
-            placeholder=""
           />
         </div>
         <div className="form-group">
           <Input
             type="email"
-            id="email"
+            label="Email"
+            required
             value={email}
             onChange={(value) => setEmail(value)}
-            placeholder=""
           />
         </div>
 
         <div className="form-group">
           <Input
             type="address"
-            id="address"
+            label="Address"
+            required
             value={address}
             onChange={(value) => setAddress(value)}
-            placeholder=""
           />
         </div>
 
         <div className="form-group">
           <Input
             type="phone"
-            id="phone"
             value={phoneNum}
+            required
             onChange={(value) => setPhoneNum(value)}
-            placeholder="Phone Number"
+            label="Phone Number"
           />
         </div>
         <div className="form-group">
           <Input
             type="password"
-            id="password"
+            required
             value={password}
             onChange={(value) => setPassword(value)}
-            placeholder="Password"
+            label="Password"
           />
         </div>
 

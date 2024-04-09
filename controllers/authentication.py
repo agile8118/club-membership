@@ -60,6 +60,10 @@ class Authentication:
         address = request.json.get("address")
         password = request.json.get("password")
 
+        # check if all fields are provided
+        if not name or not phone or not email or not address or not password:
+            return jsonify({"error": "All fields are required"}), 400
+
         # hash the provided password
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
         # convert the hashed password to base64 to be able to save to a file as JSON
@@ -68,9 +72,9 @@ class Authentication:
         # check if phone and email not taken
         for user in DB.users:
             if user["phone"] == phone:
-                return jsonify({"error": "Phone number already taken"})
+                return jsonify({"error": "Phone number already taken"}), 400
             if user["email"] == email:
-                return jsonify({"error": "Email already taken"})
+                return jsonify({"error": "Email already taken"}), 400
 
         # add user to DB
         user = {
@@ -92,3 +96,14 @@ class Authentication:
         DB.save()
 
         return jsonify({"message": "User registered successfully.", "token": token})
+
+    @staticmethod
+    def logout():
+        user_id = request.user_id
+
+        DB.update()
+        for session in DB.sessions:
+            if user_id == session.get("user_id"):
+                DB.sessions.remove(session)
+                DB.save()
+                return jsonify({"message": "Logged out successfully"})

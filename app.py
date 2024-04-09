@@ -87,13 +87,19 @@ def register():
         return Authentication.register()
 
 
+@app.route("/logout", methods=["DELETE"])
+def logout():
+    if request.method == "DELETE":
+        return Authentication.logout()
+
+
 # Example of route that requires authentication
 # The user_id is available in the request object as request.user_id
 # This only happens if the we have a valid token in the Authorization header
 # Check this function to see how it's done: check_authentication()
-@app.route("/protected-test", methods=["GET"])
-def pt():
-    if request.method == "GET":
+@app.route("/is-logged-in", methods=["POST"])
+def is_logged_in():
+    if request.method == "POST":
         return jsonify({"user": request.user_id})
 
 

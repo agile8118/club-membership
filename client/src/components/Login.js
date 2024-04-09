@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { AppContext } from "../index";
 import Input from "../reusable/Input";
 import Button from "../reusable/Button";
 import alert from "../lib/alert";
@@ -9,6 +10,7 @@ const Login = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { loggedIn, setLoggedIn, setSection } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -18,9 +20,13 @@ const Login = () => {
 
     try {
       /** @API call */
-      await axios.post("/login", { phone, password });
+      const { data } = await axios.post("/login", { phone, password });
+      localStorage.setItem("token", data.token);
+      alert("Logged in successfully!", "success");
+
       setLoggedIn(true);
       navigate("/");
+      setSection("/");
     } catch (err) {
       if (err.response.data.error) {
         alert(err.response.data.error, "error");
@@ -31,6 +37,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      <h2 className="u-text-center">Login</h2>
       <form onSubmit={onFormSubmit}>
         <div className="form-group">
           <Input
