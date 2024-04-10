@@ -101,8 +101,11 @@ def logout():
 @app.route("/is-logged-in", methods=["POST"])
 def is_logged_in():
     if request.method == "POST":
-        return jsonify({"user": request.user_id})
-
+        # find the user in the DB and return the role
+        for user in DB.users:
+            if user["id"] == request.user_id:
+                return jsonify({"user_id": request.user_id, "role": user["role"]})
+        
 
 # This route will create a new practice session. ONLY a treasurer should
 # be able to do this.
@@ -116,11 +119,26 @@ def is_logged_in():
 # {
 #     "message": "Practice session successfully scheduled.",
 # }
-#
-@app.route("/practice", methods=["POST"])
+@app.route("/practice-create", methods=["POST"])
 def create_class():
     if request.method == "POST":
         return Practice.create()
+
+# This route will add a user to an upcoming created practice session. A member 
+# must be signed in to be able to do this. The user_id should be read from request.user_id.
+# Example of an accepted JSON body:
+# {
+#     "practice_id": "23"
+# }
+#
+# Example of a response:
+# {
+#     "message": "You have been scheduled for this class.",
+# }
+@app.route("/practice-signup", methods=["POST"])
+def create_class():
+    if request.method == "POST":
+        return Practice.singup()
 
 
 if __name__ == "__main__":
