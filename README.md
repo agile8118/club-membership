@@ -7,6 +7,7 @@ Install all of them using pip:
 - Flask
 - bcrypt
 - PyJWT
+- flask_cors
 
 #### How to run the app:
 

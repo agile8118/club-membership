@@ -173,6 +173,11 @@ a:hover {
   flex-direction: column;
 }
 
+.login-container h2 {
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
 .login-bottom-msg {
   color: var(--color-text);
 }
