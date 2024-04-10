@@ -15,6 +15,7 @@ CORS(app)
 
 # Controllers
 from controllers.authentication import Authentication
+from controllers.practice import Practice
 
 
 # Middleware to check if user is authenticated
@@ -85,6 +86,25 @@ def login():
 def register():
     if request.method == "POST":
         return Authentication.register()
+
+
+# This route will create a new practice session. ONLY a treasurer should
+# be able to do this.
+# Example of an accepted JSON body:
+# {
+#     "date": "2024-04-10 17:00:00",
+#     "coach": "Adam",
+# }
+#
+# Example of a response:
+# {
+#     "message": "Practice session successfully scheduled.",
+# }
+#
+@app.route("/practice", methods=["POST"])
+def create_class():
+    if request.method == "POST":
+        return Practice.create()
 
 
 # Example of route that requires authentication
