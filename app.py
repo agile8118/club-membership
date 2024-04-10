@@ -17,6 +17,12 @@ CORS(app)
 from controllers.authentication import Authentication
 from controllers.practice import Practice
 
+# Middleware to serve the index.html file for different routes
+@app.before_request
+def send_index_file():
+    if request.method == "GET" and request.path in ["/", "/login", "/register", "/practice-classes", "/practice-create"]:
+        return send_from_directory(app.static_folder, "index.html")
+
 
 # Middleware to check if user is authenticated
 @app.before_request
@@ -40,11 +46,6 @@ def check_authentication():
         return jsonify({"error": "Unauthorized"}), 401
 
 
-# Middleware to serve the index.html file for different routes
-@app.before_request
-def send_index_file():
-    if request.method == "GET" and request.path in ["/", "/login", "/register"]:
-        return send_from_directory(app.static_folder, "index.html")
 
 
 # Example of an accepted JSON body:
@@ -136,7 +137,7 @@ def create_class():
 #     "message": "You have been scheduled for this class.",
 # }
 @app.route("/practice-signup", methods=["POST"])
-def create_class():
+def sign_up_class():
     if request.method == "POST":
         return Practice.singup()
 
