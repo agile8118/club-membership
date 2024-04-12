@@ -10,24 +10,28 @@ import {
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Practices from "./components/Practices";
+import CreatePractice from "./components/CreatePractice";
 import Header from "./components/Header";
 
 export const AppContext = createContext(null);
 function App() {
   const [loggedIn, setLoggedIn] = useState(null);
+  const [role, setRole] = useState(null);
   const [section, setSection] = useState("/"); // Possible values: ["/", "/login", "/register"];
 
   return (
-    <AppContext.Provider value={{ loggedIn, setLoggedIn, section, setSection }}>
+    <AppContext.Provider
+      value={{ loggedIn, setLoggedIn, section, setSection, role, setRole }}
+    >
       <Router>
         <Header />
         <Routes>
-          {/* EDIT THIS LATER BACK TO HOME */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} /> */}
+          <Route path="/practice-classes" element={<Practices />} />
+          <Route path="/practice-create" element={<CreatePractice />} />
         </Routes>
       </Router>
     </AppContext.Provider>
