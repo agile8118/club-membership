@@ -13,7 +13,9 @@ const Practices = () => {
   useEffect(() => {
     const fetchPracticeSessions = async () => {
       try {
-        const response = await axios.get("/data/practices");
+        const response = await axios.get("/data/practices", {
+          headers: { Authorization: localStorage.getItem("token") },
+        });
         setPracticeSessions(response.data);
       } catch (error) {
         console.error("Error fetching practice sessions:", error);
