@@ -1,29 +1,26 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { AppContext } from "../index";
-import Input from "../reusable/Input";
 import Button from "../reusable/Button";
+import InlineLoading from "../reusable/InlineLoading";
 import alert from "../lib/alert";
 
 const Practices = () => {
-  const navigate = useNavigate();
   const [practiceSessions, setPracticeSessions] = useState([]);
-
-  const { userId } = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
 
   const fetchPracticeSessions = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("/practices", {
         headers: { Authorization: localStorage.getItem("token") },
       });
       setPracticeSessions(response.data);
     } catch (error) {
-      // console.error("Error fetching practice sessions:", error);
       if (err.response.data.error) {
         alert(err.response.data.error, "error");
       }
     }
+    setLoading(false);
   };
 
   // Fetch upcoming practice sessions from the server
@@ -100,13 +97,9 @@ const Practices = () => {
   };
 
   const renderUpcomingSessions = () => {
-    // if (practiceSessions.length === 0) {
-    //   return <p>No upcoming practice sessions found.</p>;
-    // }
-
     const currentDate = new Date();
 
-    return practiceSessions.map((session) => {
+    let sessions = practiceSessions.map((session) => {
       const sessionDate = new Date(`${session.date} ${session.time}`);
 
       if (sessionDate > currentDate) {
@@ -147,16 +140,23 @@ const Practices = () => {
         );
       }
     });
+
+    // remove all undefined values
+    sessions = sessions.filter((session) => session);
+
+    if (sessions.length === 0) {
+      return (
+        <p className="u-margin-bottom-1">
+          No upcoming practice sessions found.
+        </p>
+      );
+    }
   };
 
   const renderPastSessions = () => {
-    // if (practiceSessions.length === 0) {
-    //   return <p>No upcoming practice sessions found.</p>;
-    // }
-
     const currentDate = new Date();
 
-    return practiceSessions.map((session) => {
+    let sessions = practiceSessions.map((session) => {
       const sessionDate = new Date(`${session.date} ${session.time}`);
 
       if (sessionDate < currentDate) {
@@ -182,7 +182,28 @@ const Practices = () => {
         );
       }
     });
+
+    // remove all undefined values
+    sessions = sessions.filter((session) => session);
+
+    if (sessions.length === 0) {
+      return (
+        <p className="u-margin-bottom-1">No past practice sessions found.</p>
+      );
+    }
+
+    return sessions;
   };
+
+  if (loading) {
+    return (
+      <div className="sessions-container">
+        <div className="u-text-center">
+          <InlineLoading color="gray" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="sessions-container">

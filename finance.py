@@ -1,3 +1,5 @@
+from DB import DB
+
 # -------------
 # Treasurer needs to be able to see the club’s current profit
 # -------------
