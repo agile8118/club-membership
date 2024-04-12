@@ -9,7 +9,6 @@ class Practice:
     @staticmethod
     # Create the practice session here and add it to the database
     def create():
-
         coach = request.json.get("coach")
         date = request.json.get("date")
 
@@ -27,22 +26,57 @@ class Practice:
     @staticmethod
     # Schedule a user for an upcoming practice class
     def signup():
-        
-        id = request.json.get("id")
-        coach = request.json.get("coach")
-        date = request.json.get("date")
-
-        scheduled_classes = {
-            "id": id,
-            "coach": coach,
-            "date": date
-        }
-
         DB.update()
-        DB.practices.append(scheduled_classes)
-        DB.save()
+        session_id = request.json.get("session_id")
+        # find the practice session with the same id as the session_id
+        for practice in DB.practices:
+            if practice["id"] == session_id:
+                # check if the user is already signed up
+                for member in practice["members"]:
+                    if member["member_id"] == request.user_id:
+                        return jsonify({"message": "You are already signed up for this practice session."})
+                   
+                    practice["members"].append({"member_id": request.user_id, "paid": False})
+                    DB.save()
+                    return jsonify({"message": "Successfully signup for the practice session."})
+                
+    
+    @staticmethod
+    def cancel_signup():
+        DB.update()
+        session_id = request.json.get("session_id")
+        # find the practice session with the same id as the session_id
+        for practice in DB.practices:
+            if practice["id"] == session_id:
+                # check if the user is already signed up
+                for member in practice["members"]:
+                    if member["member_id"] == request.user_id:
+                        practice["members"].remove(member)
+                        DB.save()
+                        return jsonify({"message": "You have successfully cancelled your signup for the practice session."})
+                    
+                return jsonify({"message": "You are not signed up for this practice session."})
+                
+        return jsonify({"message": "Practice session not found."})
 
-        return jsonify({"message": "Practice Session Scheduled"})
+    @staticmethod
+    def practice_pay():
+        DB.update()
+        session_id = request.json.get("session_id")
+        # find the practice session with the same id as the session_id
+        for practice in DB.practices:
+            if practice["id"] == session_id:
+                # check if the user is already signed up
+                for member in practice["members"]:
+                    if member["member_id"] == request.user_id:
+                        member["paid"] = True
+                        DB.save()
+                        return jsonify({"message": "You have successfully paid for the practice session."})
+                    
+                return jsonify({"message": "You are not signed up for this practice session."})
+                
+        return jsonify({"message": "Practice session not found."})
+
     
     @staticmethod
     # User can view upcoming classes

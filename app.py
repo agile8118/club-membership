@@ -140,6 +140,17 @@ def create_class():
 def sign_up_class():
     if request.method == "POST":
         return Practice.signup()
+    
+@app.route("/cancel-practice-signup", methods=["POST"])
+def cancel_practice_signup():
+    if request.method == "POST":
+        return Practice.cancel_signup()
+
+@app.route("/practice-pay", methods=["POST"])
+def practice_pay():
+    if request.method == "POST":
+        return Practice.practice_pay()
+
 
 @app.route("/practices", methods=["GET"])
 def get_practices():
