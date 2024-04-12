@@ -139,7 +139,7 @@ def create_class():
 @app.route("/practice-signup", methods=["POST"])
 def sign_up_class():
     if request.method == "POST":
-        return Practice.singup()
+        return Practice.signup()
 
 
 if __name__ == "__main__":

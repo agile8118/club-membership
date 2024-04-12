@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import Flask, request, jsonify
 from DB import DB
 from datetime import datetime 
 
@@ -47,7 +47,6 @@ class Practice:
     @staticmethod
     # User can view upcoming classes
     def viewclasses():
-        
-        id = request.json.get("id")
+        return jsonify(DB.practices)
 
         

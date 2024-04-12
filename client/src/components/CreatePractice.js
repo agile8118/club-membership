@@ -16,7 +16,7 @@ const CreatePractice = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/create-practice", sessionDetails);
+      await axios.post("/practice-create", sessionDetails);
       alert.success("Practice session created successfully!");
     } catch (error) {
       console.error("Error creating practice session:", error);

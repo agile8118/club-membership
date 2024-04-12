@@ -24,7 +24,7 @@ const Practices = () => {
   }, []);
 
   // Handle sign-up for a practice session
-  const handleSignUp = (sessionId) => {
+  const handleSignUp = async (sessionId) => {
     const selectedSession = practiceSessions.find(
       (session) => session.id === sessionId
     );
