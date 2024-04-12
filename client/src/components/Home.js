@@ -1,26 +1,47 @@
 import React, { useState, useEffect, useContext } from "react";
+import { AppContext } from "../index";
 import axios from "axios";
+import InlineLoading from "../reusable/InlineLoading";
 
 const Home = () => {
+  const { loggedIn } = useContext(AppContext);
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("HEY");
     fetchUserData();
-  }, []);
+  }, [loggedIn]);
 
   const fetchUserData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("/user", {
         headers: { Authorization: localStorage.getItem("token") },
       });
       setUserData(response.data);
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      setUserData(null);
     }
+    setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div className="u-text-center u-margin-top-3">
+        <InlineLoading color="gray" />
+      </div>
+    );
+  }
 
   return (
     <div className="home-message">
+      {!userData && (
+        <h1>
+          Welcome to the Club Membership App, login to access our features!
+        </h1>
+      )}
+
       {userData && (
         <h1>Welcome to the Club Membership App, {userData.name}!</h1>
       )}

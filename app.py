@@ -159,12 +159,15 @@ def get_practices():
         return Practice.get_practices()
     
 
-
 @app.route("/user", methods=["GET"])
 def get_user_info():
     if request.method == "GET":
         return User.get_user_info()
 
+@app.route("/coaches", methods=["GET"])
+def get_coaches():
+    if request.method == "GET":
+        return User.get_coaches()
 
 if __name__ == "__main__":
     app.run(debug=True)

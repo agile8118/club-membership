@@ -7,21 +7,30 @@ DB = DB()
 
 class Practice:
     @staticmethod
-    # Create the practice session here and add it to the database
+    # Create a practice session here and add it to the database
     def create():
+        DB.update()
         coach = request.json.get("coach")
+        name = request.json.get("name")
         date = request.json.get("date")
+        time = request.json.get("time")
+        price = request.json.get("price")
 
-        practice_session = {
-            "coach": coach,
-            "date": date
+        practice_session =  {
+            "id": len(DB.practices) + 1,
+            "coach_id": int(coach),
+            "name": name,
+            "date": date,
+            "time": time,
+            "price": int(price),
+            "coach_attended": False,
+            "members": []
         }
 
-        DB.update()
         DB.practices.append(practice_session)
         DB.save()
 
-        return jsonify({"message": "Practice Session Created"})
+        return jsonify({"message": "Practice session created successfully."})
     
     @staticmethod
     # Schedule a user for an upcoming practice class
@@ -36,9 +45,9 @@ class Practice:
                     if member["member_id"] == request.user_id:
                         return jsonify({"message": "You are already signed up for this practice session."})
                    
-                    practice["members"].append({"member_id": request.user_id, "paid": False})
-                    DB.save()
-                    return jsonify({"message": "Successfully signup for the practice session."})
+                practice["members"].append({"member_id": request.user_id, "paid": False})
+                DB.save()
+                return jsonify({"message": "Successfully signup for the practice session."})
                 
         return jsonify({"message": "Practice session not found."}), 404
                 

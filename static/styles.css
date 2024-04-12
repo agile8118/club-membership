@@ -53,9 +53,9 @@ body {
 }
 
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   html {
-    font-size: 8px;
+    font-size: 9px;
   }
 }
 
@@ -96,6 +96,10 @@ a:hover {
 .u-flex-text-right {
   display: flex;
   justify-content: right;
+}
+
+.u-margin-top-2 {
+  margin-top: 2rem;
 }
 
 .u-margin-top-3 {
@@ -165,7 +169,7 @@ a:hover {
 .login-container,
 .profile-container,
 .sessions-container,
-.new-post-container {
+.new-session-container {
   background: #fff;
   padding: 2rem 3rem;
   border-radius: 1rem;
@@ -206,6 +210,15 @@ a:hover {
   flex-direction: column;
 }
 
+/* ------ CREATE SESSIONS ------ */
+.new-session-container {
+  width: 45%;
+  margin: 0 auto;
+  margin-top: 3rem;
+  font-size: 1.6rem;
+  color: var(--color-text);
+}
+
 /* ------ SESSIONS ------ */
 .sessions-container {
   width: 45%;
@@ -213,6 +226,24 @@ a:hover {
   margin-top: 3rem;
   font-size: 1.6rem;
   color: var(--color-text);
+}
+
+@media only screen and (max-width: 2000px) {
+  .sessions-container {
+    width: 60%;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .sessions-container {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .sessions-container {
+    width: 95%;
+  }
 }
 
 .session {
@@ -223,7 +254,14 @@ a:hover {
   border-radius: 5px;
   padding: 1rem 2rem;
   align-items: center;
-  justify-self: center;
+}
+
+@media only screen and (max-width: 700px) {
+  .session {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+  }
 }
 
 .session__name {

@@ -42,7 +42,7 @@ const Header = () => {
 
   useEffect(() => {
     setSection(window.location.pathname);
-  }, [section]);
+  }, [section, window.location.pathname]);
 
   const logout = async () => {
     try {
@@ -52,6 +52,8 @@ const Header = () => {
       });
       localStorage.removeItem("token");
       setLoggedIn(false);
+      setRole(null);
+      setUserId(null);
       setSection("/");
       alert("Logged out successfully!", "success");
     } catch (e) {

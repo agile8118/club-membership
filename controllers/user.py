@@ -15,3 +15,13 @@ class User:
             return jsonify(user)
     
 
+  @staticmethod
+  def get_coaches():
+    DB.update()
+    coaches = []
+    for user in DB.users:
+        if user["role"] == "coach":
+            coaches.append(user)
+    return jsonify(coaches)
+
+

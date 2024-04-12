@@ -173,6 +173,10 @@ const Practices = () => {
                   Pay ${session.price}
                 </Button>
               )}
+
+              {session.member_paid && (
+                <span>Payment of ${session.price} completed.</span>
+              )}
             </div>
           </div>
         );
@@ -183,12 +187,6 @@ const Practices = () => {
   return (
     <div className="sessions-container">
       <h1>Upcoming Practice Sessions:</h1>
-      {/* <input
-        type="time"
-        onChange={(e) => {
-          console.log(e.target.value);
-        }}
-      /> */}
       <div>{renderUpcomingSessions()}</div>
       <h1>Past Practice Sessions:</h1>
       <div>{renderPastSessions()}</div>
