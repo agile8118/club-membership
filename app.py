@@ -141,6 +141,11 @@ def sign_up_class():
     if request.method == "POST":
         return Practice.signup()
 
+@app.route("/practices", methods=["GET"])
+def get_practices():
+    if request.method == "GET":
+        return Practice.get_practices()
+
 
 if __name__ == "__main__":
     app.run(debug=True)

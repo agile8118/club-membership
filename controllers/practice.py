@@ -46,7 +46,8 @@ class Practice:
     
     @staticmethod
     # User can view upcoming classes
-    def viewclasses():
+    def get_practices():
+        DB.update()
         return jsonify(DB.practices)
 
         

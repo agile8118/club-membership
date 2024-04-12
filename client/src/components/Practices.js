@@ -13,7 +13,9 @@ const Practices = () => {
   useEffect(() => {
     const fetchPracticeSessions = async () => {
       try {
-        const response = await axios.get("/data/practices");
+        const response = await axios.get("/practices", {
+          headers: { Authorization: localStorage.getItem("token") },
+        });
         setPracticeSessions(response.data);
       } catch (error) {
         console.error("Error fetching practice sessions:", error);
@@ -42,6 +44,12 @@ const Practices = () => {
   return (
     <div className="login-container">
       <h1>Upcoming Practice Sessions</h1>
+      <input
+        type="time"
+        onChange={(e) => {
+          console.log(e.target.value);
+        }}
+      />
       <ul>
         {practiceSessions.map((session) => (
           <li key={session.id}>

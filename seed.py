@@ -59,15 +59,21 @@ users = [
 practices = [
     {
         "id": 1,
-        "date": "2024-04-10 17:00",
+        "name": "ZenMotion Yoga",
+        "date": "2024-04-1",
+        "time": "17:00",
         "coach_id": 2,
+        "coach_attended": True,
         "price": 40,
-        "members": [{"member_id": 4, "paid": False}, {"member_id": 5, "paid": False}]
+        "members": [{"member_id": 4, "paid": True}, {"member_id": 5, "paid": False}]
     },
     {
         "id": 2,
-        "date": "2024-04-12 17:00",
+        "name": "Blissful Body Yoga",
+        "date": "2024-04-12",
+        "time": "17:00",
         "coach_id": 3,
+        "coach_attended": False,
         "price": 45,
         "members": [{"member_id": 4, "paid": False}, {"member_id": 5, "paid": True}]
     }
