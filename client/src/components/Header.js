@@ -7,8 +7,15 @@ import Button from "../reusable/Button";
 import alert from "../lib/alert";
 
 const Header = () => {
-  const { loggedIn, setLoggedIn, section, setSection, setRole, role } =
-    useContext(AppContext);
+  const {
+    loggedIn,
+    setLoggedIn,
+    section,
+    setSection,
+    setRole,
+    role,
+    setUserId,
+  } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -22,6 +29,7 @@ const Header = () => {
 
       setLoggedIn(true);
       setRole(data.role);
+      setUserId(data.user_id);
     } catch (err) {
       setRole(null);
       setLoggedIn(false);
@@ -34,7 +42,7 @@ const Header = () => {
 
   useEffect(() => {
     setSection(window.location.pathname);
-  }, [section]);
+  }, [section, window.location.pathname]);
 
   const logout = async () => {
     try {
@@ -44,6 +52,8 @@ const Header = () => {
       });
       localStorage.removeItem("token");
       setLoggedIn(false);
+      setRole(null);
+      setUserId(null);
       setSection("/");
       alert("Logged out successfully!", "success");
     } catch (e) {
@@ -101,7 +111,7 @@ const Header = () => {
           </Link>
         )}
 
-        {section !== "/profile" && loggedIn && (
+        {/* {section !== "/profile" && loggedIn && (
           <Link
             to="/profile"
             className="header__link header__link--profile"
@@ -111,7 +121,7 @@ const Header = () => {
           >
             Profile
           </Link>
-        )}
+        )} */}
 
         {loggedIn && (
           <Link

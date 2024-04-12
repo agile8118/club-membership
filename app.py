@@ -16,6 +16,7 @@ CORS(app)
 # Controllers
 from controllers.authentication import Authentication
 from controllers.practice import Practice
+from controllers.user import User
 
 # Middleware to serve the index.html file for different routes
 @app.before_request
@@ -140,7 +141,33 @@ def create_class():
 def sign_up_class():
     if request.method == "POST":
         return Practice.signup()
+    
+@app.route("/cancel-practice-signup", methods=["POST"])
+def cancel_practice_signup():
+    if request.method == "POST":
+        return Practice.cancel_signup()
 
+@app.route("/practice-pay", methods=["POST"])
+def practice_pay():
+    if request.method == "POST":
+        return Practice.practice_pay()
+
+
+@app.route("/practices", methods=["GET"])
+def get_practices():
+    if request.method == "GET":
+        return Practice.get_practices()
+    
+
+@app.route("/user", methods=["GET"])
+def get_user_info():
+    if request.method == "GET":
+        return User.get_user_info()
+
+@app.route("/coaches", methods=["GET"])
+def get_coaches():
+    if request.method == "GET":
+        return User.get_coaches()
 
 @app.route("/practices", methods=["GET"])
 def get_practices():
