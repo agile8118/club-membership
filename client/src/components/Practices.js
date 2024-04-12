@@ -7,15 +7,16 @@ import alert from "../lib/alert";
 
 const Practices = () => {
   const navigate = useNavigate();
-  const [practiceSessions, setPracticeSessions] = useState([]);
+  const [practiceSessions, setPracticeSessions] = useState([{}]);
 
   // Fetch upcoming practice sessions from the server
   useEffect(() => {
     const fetchPracticeSessions = async () => {
       try {
-        const response = await axios.get("/data/practices", {
+        const response = await axios.get("/practices", {
           headers: { Authorization: localStorage.getItem("token") },
         });
+        // console.log(response.data);
         setPracticeSessions(response.data);
       } catch (error) {
         console.error("Error fetching practice sessions:", error);
@@ -47,9 +48,9 @@ const Practices = () => {
       <ul>
         {practiceSessions.map((session) => (
           <li key={session.id}>
-            <span>{session.date}</span>
-            <span>{session.location}</span>
-            <span>{session.coach}</span>
+            <span>Date: {session.date}</span>
+            <span>Coach: {session.coach}</span>
+            <span>Members: {session.member_ids.join(", ")}</span>
             <Button onClick={() => handleSignUp(session.id)}>Sign Up</Button>
           </li>
         ))}

@@ -142,5 +142,10 @@ def sign_up_class():
         return Practice.signup()
 
 
+@app.route("/practices", methods=["GET"])
+def get_practices():
+    return Practice.viewclasses()
+
+
 if __name__ == "__main__":
     app.run(debug=True)
