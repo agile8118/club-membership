@@ -7,8 +7,15 @@ import Button from "../reusable/Button";
 import alert from "../lib/alert";
 
 const Header = () => {
-  const { loggedIn, setLoggedIn, section, setSection, setRole, role } =
-    useContext(AppContext);
+  const {
+    loggedIn,
+    setLoggedIn,
+    section,
+    setSection,
+    setRole,
+    role,
+    setUserId,
+  } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -22,6 +29,7 @@ const Header = () => {
 
       setLoggedIn(true);
       setRole(data.role);
+      setUserId(data.user_id);
     } catch (err) {
       setRole(null);
       setLoggedIn(false);
