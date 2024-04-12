@@ -84,6 +84,7 @@ class Authentication:
             "email": email,
             "address": address,
             "password": hashed_password_base64,
+            "role": "member" # other roles are "coach" and "treasurer"
         }
         print(hashed_password_base64)
         DB.users.append(user)

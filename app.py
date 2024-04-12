@@ -15,6 +15,14 @@ CORS(app)
 
 # Controllers
 from controllers.authentication import Authentication
+from controllers.practice import Practice
+from controllers.user import User
+
+# Middleware to serve the index.html file for different routes
+@app.before_request
+def send_index_file():
+    if request.method == "GET" and request.path in ["/", "/login", "/register", "/practice-classes", "/practice-create"]:
+        return send_from_directory(app.static_folder, "index.html")
 
 
 # Middleware to check if user is authenticated
@@ -39,11 +47,6 @@ def check_authentication():
         return jsonify({"error": "Unauthorized"}), 401
 
 
-# Middleware to serve the index.html file for different routes
-@app.before_request
-def send_index_file():
-    if request.method == "GET" and request.path in ["/", "/login", "/register"]:
-        return send_from_directory(app.static_folder, "index.html")
 
 
 # Example of an accepted JSON body:
@@ -100,8 +103,71 @@ def logout():
 @app.route("/is-logged-in", methods=["POST"])
 def is_logged_in():
     if request.method == "POST":
-        return jsonify({"user": request.user_id})
+        # find the user in the DB and return the role
+        for user in DB.users:
+            if user["id"] == request.user_id:
+                return jsonify({"user_id": request.user_id, "role": user["role"]})
+        
 
+# This route will create a new practice session. ONLY a treasurer should
+# be able to do this.
+# Example of an accepted JSON body:
+# {
+#     "date": "2024-04-10 17:00:00",
+#     "coach": "Adam",
+# }
+#
+# Example of a response:
+# {
+#     "message": "Practice session successfully scheduled.",
+# }
+@app.route("/practice-create", methods=["POST"])
+def create_class():
+    if request.method == "POST":
+        return Practice.create()
+
+# This route will add a user to an upcoming created practice session. A member 
+# must be signed in to be able to do this. The user_id should be read from request.user_id.
+# Example of an accepted JSON body:
+# {
+#     "practice_id": "23"
+# }
+#
+# Example of a response:
+# {
+#     "message": "You have been scheduled for this class.",
+# }
+@app.route("/practice-signup", methods=["POST"])
+def sign_up_class():
+    if request.method == "POST":
+        return Practice.signup()
+    
+@app.route("/cancel-practice-signup", methods=["POST"])
+def cancel_practice_signup():
+    if request.method == "POST":
+        return Practice.cancel_signup()
+
+@app.route("/practice-pay", methods=["POST"])
+def practice_pay():
+    if request.method == "POST":
+        return Practice.practice_pay()
+
+
+@app.route("/practices", methods=["GET"])
+def get_practices():
+    if request.method == "GET":
+        return Practice.get_practices()
+    
+
+@app.route("/user", methods=["GET"])
+def get_user_info():
+    if request.method == "GET":
+        return User.get_user_info()
+
+@app.route("/coaches", methods=["GET"])
+def get_coaches():
+    if request.method == "GET":
+        return User.get_coaches()
 
 if __name__ == "__main__":
     app.run(debug=True)

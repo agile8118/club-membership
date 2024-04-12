@@ -7,31 +7,42 @@ import Button from "../reusable/Button";
 import alert from "../lib/alert";
 
 const Header = () => {
-  const { loggedIn, setLoggedIn, section, setSection } = useContext(AppContext);
+  const {
+    loggedIn,
+    setLoggedIn,
+    section,
+    setSection,
+    setRole,
+    role,
+    setUserId,
+  } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   const checkLoggedIn = async () => {
     try {
-      await axios.post(
+      const { data } = await axios.post(
         "/is-logged-in",
         {},
         { headers: { Authorization: localStorage.getItem("token") } }
       );
 
       setLoggedIn(true);
+      setRole(data.role);
+      setUserId(data.user_id);
     } catch (err) {
+      setRole(null);
       setLoggedIn(false);
     }
   };
 
   useEffect(() => {
-    if (loggedIn === null) checkLoggedIn();
+    checkLoggedIn();
   }, [loggedIn]);
 
   useEffect(() => {
     setSection(window.location.pathname);
-  }, [section]);
+  }, [section, window.location.pathname]);
 
   const logout = async () => {
     try {
@@ -41,6 +52,8 @@ const Header = () => {
       });
       localStorage.removeItem("token");
       setLoggedIn(false);
+      setRole(null);
+      setUserId(null);
       setSection("/");
       alert("Logged out successfully!", "success");
     } catch (e) {
@@ -74,7 +87,31 @@ const Header = () => {
           </Link>
         )}
 
-        {section !== "/profile" && loggedIn && (
+        {section !== "/practice-classes" && role === "member" && loggedIn && (
+          <Link
+            to="/practice-classes"
+            className="header__link header__link--profile"
+            onClick={() => {
+              setSection("/practice-classes");
+            }}
+          >
+            Classes
+          </Link>
+        )}
+
+        {section !== "/practice-create" && role === "treasurer" && loggedIn && (
+          <Link
+            to="/practice-create"
+            className="header__link header__link--profile"
+            onClick={() => {
+              setSection("/practice-create");
+            }}
+          >
+            Create Class
+          </Link>
+        )}
+
+        {/* {section !== "/profile" && loggedIn && (
           <Link
             to="/profile"
             className="header__link header__link--profile"
@@ -84,7 +121,7 @@ const Header = () => {
           >
             Profile
           </Link>
-        )}
+        )} */}
 
         {loggedIn && (
           <Link

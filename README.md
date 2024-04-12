@@ -11,7 +11,11 @@ Install all of them using pip:
 
 #### How to run the app:
 
-After pip installing the packages above, run `python app.py` from the working directory.
+1. Install the packages above using pip.
+2. Run `python seed.py` from the root folder to add starting data to the database.
+3. Run `npm install` from the client folder to install the dependencies for react.
+4. Run `npm run build` from the client folder to build the react code.
+5. Run the server by running `python app.py` from the root folder.
 
 #### How to push your changes:
 

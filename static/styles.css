@@ -53,9 +53,9 @@ body {
 }
 
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   html {
-    font-size: 8px;
+    font-size: 9px;
   }
 }
 
@@ -98,12 +98,25 @@ a:hover {
   justify-content: right;
 }
 
+.u-margin-top-2 {
+  margin-top: 2rem;
+}
+
 .u-margin-top-3 {
   margin-top: 3rem;
 }
 
 .u-margin-left-03 {
   margin-left: 0.3rem;
+}
+
+
+.u-margin-bottom-1 {
+  margin-bottom: 1rem;
+}
+
+.u-margin-bottom-2 {
+  margin-bottom: 2rem;
 }
 
 /* ------ HEADER ------ */
@@ -151,10 +164,21 @@ a:hover {
   letter-spacing: 2px;
 }
 
+
+/* ------ HOME ------ */
+.home-message {
+  font-size: 2rem;
+  color: var(--color-text);
+  margin-top: 3.5rem;
+  text-align: center;
+
+}
+
 /* ------ LOGIN ------ */
 .login-container,
 .profile-container,
-.new-post-container {
+.sessions-container,
+.new-session-container {
   background: #fff;
   padding: 2rem 3rem;
   border-radius: 1rem;
@@ -193,6 +217,79 @@ a:hover {
 .profile-container form {
   display: flex;
   flex-direction: column;
+}
+
+/* ------ CREATE SESSIONS ------ */
+.new-session-container {
+  width: 45%;
+  margin: 0 auto;
+  margin-top: 3rem;
+  font-size: 1.6rem;
+  color: var(--color-text);
+}
+
+/* ------ SESSIONS ------ */
+.sessions-container {
+  width: 45%;
+  margin: 0 auto;
+  margin-top: 3rem;
+  font-size: 1.6rem;
+  color: var(--color-text);
+}
+
+@media only screen and (max-width: 2000px) {
+  .sessions-container {
+    width: 60%;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .sessions-container {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .sessions-container {
+    width: 95%;
+  }
+}
+
+.session {
+  display: flex;
+  border: 1px solid var(--color-gray-light);
+  margin-bottom: 2rem;
+  height: 6rem;
+  border-radius: 5px;
+  padding: 1rem 2rem;
+  align-items: center;
+}
+
+@media only screen and (max-width: 700px) {
+  .session {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+  }
+}
+
+.session__name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-right: 2rem;
+}
+
+.session_coach {
+  margin-right: 2rem;
+}
+
+.session_actions {
+  margin-left: auto;
+  display: flex;
+}
+
+.session_actions button {
+  margin-left: 1rem;
 }
 
 /* -------------- Form Input ------------ */
