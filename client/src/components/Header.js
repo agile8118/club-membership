@@ -109,7 +109,7 @@ const Header = () => {
           </Link>
         )}
 
-        {section !== "/profile" && loggedIn && (
+        {/* {section !== "/profile" && loggedIn && (
           <Link
             to="/profile"
             className="header__link header__link--profile"
@@ -119,7 +119,7 @@ const Header = () => {
           >
             Profile
           </Link>
-        )}
+        )} */}
 
         {loggedIn && (
           <Link

@@ -16,6 +16,7 @@ CORS(app)
 # Controllers
 from controllers.authentication import Authentication
 from controllers.practice import Practice
+from controllers.user import User
 
 # Middleware to serve the index.html file for different routes
 @app.before_request
@@ -156,6 +157,13 @@ def practice_pay():
 def get_practices():
     if request.method == "GET":
         return Practice.get_practices()
+    
+
+
+@app.route("/user", methods=["GET"])
+def get_user_info():
+    if request.method == "GET":
+        return User.get_user_info()
 
 
 if __name__ == "__main__":

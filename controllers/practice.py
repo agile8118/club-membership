@@ -40,6 +40,8 @@ class Practice:
                     DB.save()
                     return jsonify({"message": "Successfully signup for the practice session."})
                 
+        return jsonify({"message": "Practice session not found."}), 404
+                
     
     @staticmethod
     def cancel_signup():
@@ -55,9 +57,9 @@ class Practice:
                         DB.save()
                         return jsonify({"message": "You have successfully cancelled your signup for the practice session."})
                     
-                return jsonify({"message": "You are not signed up for this practice session."})
+                return jsonify({"message": "You are not signed up for this practice session."}), 401
                 
-        return jsonify({"message": "Practice session not found."})
+        return jsonify({"message": "Practice session not found."}), 404
 
     @staticmethod
     def practice_pay():
@@ -73,9 +75,9 @@ class Practice:
                         DB.save()
                         return jsonify({"message": "You have successfully paid for the practice session."})
                     
-                return jsonify({"message": "You are not signed up for this practice session."})
+                return jsonify({"message": "You are not signed up for this practice session."}), 401
                 
-        return jsonify({"message": "Practice session not found."})
+        return jsonify({"message": "Practice session not found."}), 404
 
     
     @staticmethod
