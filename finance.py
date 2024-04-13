@@ -9,30 +9,62 @@ class Finance:
     def __init__(self):
         self.income_statement = {}
         self.profit_list = []
+        self.expenses_dict = {}
 
-    # Method to add revenue to the income statement
-    def add_revenue(self, revenue):
-        self.income_statement['revenue'] = revenue
+    # Method to add revenue to the income statement and dictionary
+    def add_revenue(self, portion, amount):
+        if 'revenue' not in self.income_statement:
+            self.income_statement['revenue'] = {}
+        self.income_statement['revenue'][portion] = amount
 
-    # Method to add expenses to the income statement
-    def add_expenses(self, expenses):
-        self.income_statement['expenses'] = expenses
+    # Method to add expenses to the income statement and dictionary
+    def add_expenses(self, portion, amount):
+        if 'expenses' not in self.income_statement:
+            self.income_statement['expenses'] = {}
+        self.income_statement['expenses'][portion] = amount
 
-    # Method to log monthly profit
-    def log_monthly_profit(self, month, profit):
-        self.profit_list.append((month, profit))
+    # Method to add monthly profit to the profit list
+    def add_monthly_profit(self, year, month, profit):
+        if year not in self.profit_list:
+            self.profit_list[year] = []
+        self.profit_list[year].append((month, profit))
 
-    # Method to log unpaid debt for a specific month
-    def log_unpaid_debt(self, month, unpaid_debt):
-        self.income_statement['unpaid_debt'] = {month: unpaid_debt}
+    # Method to get the total unpaid expenses
+    def get_total_unpaid_expenses(self):
+        total_coach_expenses = sum(expense for month, expense in self.expenses_dict.get('coach', {}).items())
+        total_hall_expenses = sum(expense for month, expense in self.expenses_dict.get('hall', {}).items())
+        total_utilities_expenses = sum(expense for month, expense in self.expenses_dict.get('utilities', {}).items())
+        total_event_expenses = sum(expense for month, expense in self.expenses_dict.get('events', {}).items())
+        return total_coach_expenses, total_hall_expenses, total_utilities_expenses, total_event_expenses
 
-    # Method to log account payables for a specific month
-    def log_account_payables(self, month, account_payables):
-        self.income_statement['account_payables'] = {month: account_payables}
+    # Method to record transactions
+    def record_transaction(self, transaction):
+        if 'transactions' not in self.income_statement:
+            self.income_statement['transactions'] = []
+        self.income_statement['transactions'].append(transaction)
+
+    # Method to retrieve the current month's account payables
+    def get_current_month_account_payables(self, month):
+        # Calculate account payables based on revenues recorded for the current month
+        current_month_revenue = self.income_statement['revenue'].get(month, 0)
+        return current_month_revenue
 
     # Method to save changes to the database
     def save_to_database(self):
         DB.save()
+
+    # Method to output all expenses for each month in tabular form
+    def output_expenses_table(self):
+        print("\nExpenses for Each Month:")
+        print("Month    | Coach Expenses | Hall Expenses | Utilities Expenses | Event Expenses")
+        print("-------------------------------------------------------------------------------")
+        for month in self.expenses_dict.get('coach', {}).keys():
+            coach_expenses = self.expenses_dict['coach'].get(month, 0)
+            hall_expenses = self.expenses_dict['hall'].get(month, 0)
+            utilities_expenses = self.expenses_dict['utilities'].get(month, 0)
+            event_expenses = self.expenses_dict['events'].get(month, 0)
+            print(f"{month} | {coach_expenses} | {hall_expenses} | {utilities_expenses} | {event_expenses}")
+        print("-------------------------------------------------------------------------------")
 
 # Function to calculate finances based on provided data
 def calculate_finances(data):
@@ -53,6 +85,12 @@ def calculate_finances(data):
         rent_expense = 200  # Example rent expense
         total_expenses += rent_expense
 
+        utilities_expense = 50  # Example utilities expense
+        total_expenses += utilities_expense
+
+        event_expense = 100  # Example event expense
+        total_expenses += event_expense
+
         unpaid_fees = price_per_member * sum(1 for member in session["members"] if not member["paid"])
         unpaid_debt += unpaid_fees
 
@@ -62,58 +100,68 @@ def calculate_finances(data):
 
 
 def main():
-    # Define command-line arguments
-    parser = argparse.ArgumentParser(description='Manage club finances.')
-    parser.add_argument('action', choices=['revenue', 'expenses', 'profit', 'unpaid_debt', 'account_payables'],
-                        help='Action to perform: revenue, expenses, profit, unpaid_debt, account_payables')
-    parser.add_argument('--month', help='Month for logging/unpaid debt/account payables')
-    parser.add_argument('--revenue', type=int, help='Total revenue amount')
-    parser.add_argument('--expenses', type=int, help='Total expenses amount')
-    parser.add_argument('--profit', type=int, help='Monthly profit amount')
-    parser.add_argument('--coach_expenses', type=int, help='Total unpaid coach expenses')
-    parser.add_argument('--hall_expenses', type=int, help='Total unpaid hall expenses')
-
-    args = parser.parse_args()
-
     finance = Finance()
 
-    print("Performing action:", args.action)
+    print("\nClub Finances Management Menu:")
+    print("[1] Add Revenue")
+    print("[2] Add Expenses")
+    print("[3] Add Monthly Profit")
+    print("[4] Get Total Unpaid Expenses")
+    print("[5] Record Transaction")
+    print("[6] Get Current Month's Account Payables")
+    print("[7] Output Expenses Table")
+    print("[8] Save to Database")
+    print("[9] Exit")
 
-    # Perform the requested action based on the provided arguments
-    if args.action == 'revenue':
-        print("Adding revenue:", args.revenue)
-        finance.add_revenue(args.revenue)
-        finance.save_to_database()
-        print("Revenue added and saved to database.")
+    while True:
+        choice = input("Enter your choice: ")
 
-    elif args.action == 'expenses':
-        print("Adding expenses:", args.expenses)
-        finance.add_expenses(args.expenses)
-        finance.save_to_database()
-        print("Expenses added and saved to database.")
+        if choice == "1":
+            portion = input("Enter portion: ")
+            amount = float(input("Enter amount: "))
+            finance.add_revenue(portion, amount)
 
-    elif args.action == 'profit':
-        print("Logging monthly profit for", args.month, ":", args.profit)
-        finance.log_monthly_profit(args.month, args.profit)
-        finance.save_to_database()
-        print("Monthly profit logged and saved to database.")
+        elif choice == "2":
+            portion = input("Enter portion: ")
+            amount = float(input("Enter amount: "))
+            finance.add_expenses(portion, amount)
 
-    elif args.action == 'unpaid_debt':
-        total_unpaid_debt = args.coach_expenses + args.hall_expenses
-        print("Logging unpaid debt for", args.month, ":", total_unpaid_debt)
-        finance.log_unpaid_debt(args.month, total_unpaid_debt)
-        finance.save_to_database()
-        print("Unpaid debt logged and saved to database.")
+        elif choice == "3":
+            year = input("Enter year: ")
+            month = input("Enter month: ")
+            profit = float(input("Enter profit: "))
+            finance.add_monthly_profit(year, month, profit)
 
-    elif args.action == 'account_payables':
-        month_data = DB.get_month_data(args.month)
-        total_unpaid_fees = sum(session["price"] * (len(session["members"]) - sum(member["paid"] for member in session["members"])) for session in month_data)
-        print("Calculating account payables for", args.month, ":", total_unpaid_fees)
-        finance.log_account_payables(args.month, total_unpaid_fees)
-        finance.save_to_database()
-        print("Account payables calculated and saved to database.")
+        elif choice == "4":
+            coach_expenses, hall_expenses, utilities_expenses, event_expenses = finance.get_total_unpaid_expenses()
+            print(f"Total Unpaid Coach Expenses: {coach_expenses}")
+            print(f"Total Unpaid Hall Expenses: {hall_expenses}")
+            print(f"Total Utilities Expenses: {utilities_expenses}")
+            print(f"Total Event Expenses: {event_expenses}")
+
+        elif choice == "5":
+            transaction = input("Enter transaction: ")
+            finance.record_transaction(transaction)
+
+        elif choice == "6":
+            month = input("Enter month: ")
+            account_payables = finance.get_current_month_account_payables(month)
+            print(f"Account Payables for {month}: {account_payables}")
+
+        elif choice == "7":
+            finance.output_expenses_table()
+
+        elif choice == "8":
+            finance.save_to_database()
+            print("Changes saved to database.")
+
+        elif choice == "9":
+            print("Exiting program. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please select a valid option.")
 
 
 if __name__ == "__main__":
     main()
-
