@@ -9,25 +9,31 @@ class Finance:
     def __init__(self):
         self.income_statement = {}
         self.profit_list = []
-        self.expenses_dict = {}
+        self.expenses_dict = {'coach': {}, 'hall': {}, 'utilities': {}, 'events': {}}
+        self.revenue_dict = {}
 
     # Method to add revenue to the income statement and dictionary
-    def add_revenue(self, portion, amount):
+    def add_revenue(self, month, amount):
         if 'revenue' not in self.income_statement:
             self.income_statement['revenue'] = {}
-        self.income_statement['revenue'][portion] = amount
+        self.income_statement['revenue'][month] = amount
+        if month not in self.revenue_dict:
+            self.revenue_dict[month] = amount
+        else:
+            self.revenue_dict[month] += amount
 
     # Method to add expenses to the income statement and dictionary
-    def add_expenses(self, portion, amount):
-        if 'expenses' not in self.income_statement:
-            self.income_statement['expenses'] = {}
-        self.income_statement['expenses'][portion] = amount
+    def add_expenses(self, month, category, amount):
+        if category not in self.expenses_dict:
+            self.expenses_dict[category] = {}
+        if month not in self.expenses_dict[category]:
+            self.expenses_dict[category][month] = amount
+        else:
+            self.expenses_dict[category][month] += amount
 
     # Method to add monthly profit to the profit list
-    def add_monthly_profit(self, year, month, profit):
-        if year not in self.profit_list:
-            self.profit_list[year] = []
-        self.profit_list[year].append((month, profit))
+    def add_monthly_profit(self, month, profit):
+        self.profit_list.append((month, profit))
 
     # Method to get the total unpaid expenses
     def get_total_unpaid_expenses(self):
@@ -58,13 +64,23 @@ class Finance:
         print("\nExpenses for Each Month:")
         print("Month    | Coach Expenses | Hall Expenses | Utilities Expenses | Event Expenses")
         print("-------------------------------------------------------------------------------")
-        for month in self.expenses_dict.get('coach', {}).keys():
+        for month in self.expenses_dict['coach']:
             coach_expenses = self.expenses_dict['coach'].get(month, 0)
             hall_expenses = self.expenses_dict['hall'].get(month, 0)
             utilities_expenses = self.expenses_dict['utilities'].get(month, 0)
             event_expenses = self.expenses_dict['events'].get(month, 0)
             print(f"{month} | {coach_expenses} | {hall_expenses} | {utilities_expenses} | {event_expenses}")
         print("-------------------------------------------------------------------------------")
+
+    # Method to output all revenue for each month in tabular form
+    def output_revenue_table(self):
+        print("\nRevenue for Each Month:")
+        print("Month    | Revenue")
+        print("-------------------")
+        for month, revenue in self.revenue_dict.items():
+            print(f"{month} | {revenue}")
+        print("-------------------")
+
 
 # Function to calculate finances based on provided data
 def calculate_finances(data):
@@ -110,27 +126,31 @@ def main():
     print("[5] Record Transaction")
     print("[6] Get Current Month's Account Payables")
     print("[7] Output Expenses Table")
-    print("[8] Save to Database")
-    print("[9] Exit")
+    print("[8] Output Revenue Table")
+    print("[9] Save to Database")
+    print("[10] Exit")
 
     while True:
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            portion = input("Enter portion: ")
-            amount = float(input("Enter amount: "))
-            finance.add_revenue(portion, amount)
+            month = input("Enter month: ")
+            amount = float(input("Enter revenue amount: "))
+            finance.add_revenue(month, amount)
+            finance.save_to_database()
 
         elif choice == "2":
-            portion = input("Enter portion: ")
-            amount = float(input("Enter amount: "))
-            finance.add_expenses(portion, amount)
+            month = input("Enter month: ")
+            category = input("Enter category (coach/hall/utilities/events): ")
+            amount = float(input("Enter expenses amount: "))
+            finance.add_expenses(month, category, amount)
+            finance.save_to_database()
 
         elif choice == "3":
-            year = input("Enter year: ")
             month = input("Enter month: ")
             profit = float(input("Enter profit: "))
-            finance.add_monthly_profit(year, month, profit)
+            finance.add_monthly_profit(month, profit)
+            finance.save_to_database()
 
         elif choice == "4":
             coach_expenses, hall_expenses, utilities_expenses, event_expenses = finance.get_total_unpaid_expenses()
@@ -142,6 +162,7 @@ def main():
         elif choice == "5":
             transaction = input("Enter transaction: ")
             finance.record_transaction(transaction)
+            finance.save_to_database()
 
         elif choice == "6":
             month = input("Enter month: ")
@@ -152,10 +173,13 @@ def main():
             finance.output_expenses_table()
 
         elif choice == "8":
+            finance.output_revenue_table()
+
+        elif choice == "9":
             finance.save_to_database()
             print("Changes saved to database.")
 
-        elif choice == "9":
+        elif choice == "10":
             print("Exiting program. Goodbye!")
             break
 
