@@ -151,6 +151,8 @@ const Practices = () => {
         </p>
       );
     }
+
+    return sessions;
   };
 
   const renderPastSessions = () => {

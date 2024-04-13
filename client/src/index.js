@@ -12,7 +12,6 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Practices from "./components/Practices";
 import CreatePractice from "./components/CreatePractice";
-import Profile from "./components/Profile";
 import Header from "./components/Header";
 
 export const AppContext = createContext(null);
@@ -41,7 +40,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/practice-classes" element={<Practices />} />
           <Route path="/practice-create" element={<CreatePractice />} />
         </Routes>
