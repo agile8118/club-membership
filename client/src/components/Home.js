@@ -60,7 +60,10 @@ const Home = () => {
       )}
 
       {userData && userData.role === "coach" && (
-        <div>As a coach, you can see the practice session assigned to you!</div>
+        <div>
+          We still haven't added any features for our coaches on the website,
+          stay tuned!
+        </div>
       )}
     </div>
   );
